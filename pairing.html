@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+
+    <head>
+
+        <meta charset="utf-8" />
+        <title>Random Pairing</title>
+
+        <script src="vendors/Lodash-3.10.1.js"></script>
+        <script src="vendors/Cryptojs.aes-3.1.2.js"></script>
+
+        <style>
+
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body, .main {
+                margin: 0;
+
+                width: 100%;
+                height: 100%;
+
+                padding: 0;
+            }
+
+            body {
+                
+                background: url(./assets/background2.jpg);
+                background-size: 600px;
+                box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+                background-repeat: repeat;
+
+                animation-name: hearts;
+                animation-duration: 10s;
+                animation-iteration-count: infinite;
+                animation-timing-function: linear;
+                
+            
+                font-family: 'Comic Sans MS';
+            }
+
+            @media (min-width: 768px) {
+                body {
+                    background-position: 500px 200px, bottom right -15px, top right, 0 0, 0 0;
+                }
+            }
+
+            @keyframes hearts {
+                from { background-position: 500px 200px, bottom right -15px, top 368px left, 0 0, 0 0; }
+                to { background-position: 100px 640px, bottom right -15px, top 368px left, 0 300px, 0 0; }
+            }
+            
+            .main {
+                display: flex;
+            }
+
+            .background {
+                position: absolute;
+
+                left: 0;
+                bottom: 0;
+            }
+
+            .wrapper {
+                margin: auto;
+                padding: 35px;
+
+
+                background-image: url(./assets/NEWBACKGROUND.jpg);
+                background-repeat: repeat;
+
+                box-shadow: 3px 3px 10px rgba(0, 0, 0, .5);
+            }
+
+            .content {
+                padding: 40px;
+
+                background: #ffffff;
+
+                text-align: center;
+            }
+
+            .title {
+                font-size: 30px;
+            }
+
+            .sub-title {
+                font-size: 20px;
+                font-style: italic;
+                background-color: lightpink;
+                border-radius: 25px;
+                padding: 10px 20px;
+            }
+
+            #pairing-name {
+                font-size: 50px;
+                color: red;
+            }
+
+            #pairing-details {
+                margin-bottom: 20px;
+
+                font-size: 20px;
+            }
+
+            .affiliate {
+                display: block;
+                box-sizing: content-box;
+
+                margin-top: 40px;
+
+                border: none;
+
+                background: rgba(255, 255, 255, .7);
+            }
+
+            .affiliate + .affiliate {
+                margin-top: 40px;
+            }
+
+        </style>
+
+        <script>
+
+            var queryString = _.chain( location.search.slice( 1 ).split( /&/g ) )
+                .map( function ( item ) { if ( item ) return item.split( /=/ ).map( function ( str ) { return decodeURIComponent( str ); } ); } )
+                .compact().object().value();
+
+            var name = queryString.name;
+
+            var pairing = CryptoJS.AES.decrypt( queryString.pairing, queryString.key ).toString(CryptoJS.enc.Utf8);
+            var pairingDefinition = pairing.match( /^([^(]+)(?: (\([^)]+\)))?$/ );
+
+        </script>
+
+    </head>
+
+    <body>
+
+        <div class="main">
+
+            <div class="wrapper">
+                <div class="content" style="font-weight: bold;">
+
+                    <div class="title">Hi <span id="name" style="text-transform: capitalize; color: darkblue;"></span>! <br>You've been paired with</div>
+                    <script style="text-transform: capitalize;">document.getElementById('name').innerText = name</script>
+
+                    <div class="pairing" style="text-transform: capitalize;">
+                        <div id="pairing-name"></div>
+                        <div id="pairing-details"></div>
+                        <script>
+                            document.getElementById('pairing-name').innerText = pairingDefinition[1];
+
+                            if (pairingDefinition[2]) {
+                                document.getElementById('pairing-details').innerText = pairingDefinition[2];
+                            } else {
+                                document.getElementById('pairing-details').style.display = 'none';
+                            }
+                        </script>
+                    </div>
+                    <!-- <br> -->
+                    <!-- <div class="sub-title">Tell us one thing you admire about him/her and <br> we will make sure to send the message <br> across with a gift!</div> -->
+
+                    <script>
+                        if (queryString.extra) {
+                            document.write('<iframe class="affiliate" src="http://rcm-eu.amazon-adsystem.com/e/cm?t=secrsant02e-21&o=8&p=48&l=ur1&category=books&banner=10DQAXJ7D1D2VTXMR682&f=ifr" width="728" height="90" scrolling="no" border="0" marginwidth="0" frameborder="0"></iframe>');
+                        }
+                    </script>
+
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
